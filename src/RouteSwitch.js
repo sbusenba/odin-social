@@ -1,16 +1,16 @@
-import { BrowserRouter,Routes,Route } from "react-router-dom";
+import { BrowserRouter,Routes,Route} from "react-router-dom";
 import App from "./App";
+import Header from "./Header";
 
 
 const RouteSwitch = () =>{
     return(
         <BrowserRouter>
             <Routes>
-                <Route path= "/" element = {<Interface/>}>
-                    <Route path = "/" element = {<App/>}/>
-                    {/* <Route path="/app" element = {<App/>}/>
-                    <Route path="/profile" element = {<Profile/>}/> */}
-                </Route>
+                
+                    <Route path = "/" element = {<Header/>}>
+                        <Route path="app" element = {<App/>}/>
+                    </Route>        
             </Routes>
         </BrowserRouter>
     )
