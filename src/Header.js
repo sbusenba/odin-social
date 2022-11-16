@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet,Link } from "react-router-dom";
 import{useState}from 'react';
 import { initializeApp } from "firebase/app";
 import {
@@ -9,6 +9,7 @@ import {
   signOut,
 } from "firebase/auth";
 import './styles/header.css'
+
 function Header() {
   
 // Your web app's Firebase configuration
@@ -97,13 +98,18 @@ function addSizeToGoogleProfilePic(url) {
   }
   return url;
 }
+const linkStyle = {
+  margin: "0rem",
+  textDecoration: "none",
+  color: "rgb(255,255,255)",
+};
 
 initFirebaseAuth();
     return (
       <div className="app">
         <header className="App-header">
-            <div id ='app-logo'>Something Social</div>
-            <div id ='new-post'>+</div>
+            <Link to="/" style={linkStyle}><div id ='app-logo'>Something Social</div></Link>
+            <Link to="/post" style={linkStyle}><div id ='new-post'>+</div></Link>
             <div id ='user-container'>
                 <div hidden id="user-pic"></div>
                 <div>
