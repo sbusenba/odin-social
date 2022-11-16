@@ -1,0 +1,37 @@
+.App-header {
+    background-color: #282c34;
+    min-height: 20vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+#user-container{
+    padding:1rem;
+    margin:0.5rem;
+    display:flex;
+    flex-direction: row;
+    border-radius: 5px;
+    background-color:  #404653;
+}
+#user-pic {
+    border-radius: 5px;
+    margin: .5rem;
+}
+#app-logo {
+    padding:2rem;
+    font-size:3rem;
+}
+#new-post{
+    background-color: #404653;
+    height:60px;
+    width:60px;
+    border-radius: 30px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem;
+    flex:0 0 60px;
+}
