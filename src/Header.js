@@ -9,6 +9,7 @@ import {
   signOut,
 } from "firebase/auth";
 import './styles/header.css'
+import PleaseSignIn from "./components/PleaseSignIn";
 
 function Header() {
   
@@ -123,7 +124,7 @@ initFirebaseAuth();
             </button>
             </div>             
         </header>
-        {signedIn? <Outlet/>:null}
+        {signedIn? <Outlet/>:<PleaseSignIn/>}
       </div>
     );
   }
