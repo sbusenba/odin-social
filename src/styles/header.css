@@ -19,6 +19,8 @@
 #user-pic {
     border-radius: 5px;
     margin: .5rem;
+    height:90px;
+    width:90px;
 }
 #app-logo {
     padding:2rem;
@@ -35,3 +37,7 @@
     margin: 0.5rem;
     flex:0 0 60px;
 }
+
+
+
+
