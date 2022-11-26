@@ -10,21 +10,31 @@ import {
 } from "firebase/auth";
 import './styles/header.css'
 import PleaseSignIn from "./components/PleaseSignIn";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage';
+import { getFirestore,collection,addDoc,updateDoc,serverTimestamp, } from "firebase/firestore";
 
 function Header() {
-  
+
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCPbuSvifzyolZ6rO83Bzv1HEyRAaMhsyM",
   authDomain: "odin-social-bb257.firebaseapp.com",
   projectId: "odin-social-bb257",
-  storageBucket: "odin-social-bb257.appspot.com",
+  storageBucket: "gs://odin-social-bb257.appspot.com",
   messagingSenderId: "512601198050",
   appId: "1:512601198050:web:6cd6ae9320f6d4778bbdbb"
 };
 const [signedIn, setSignedIn] = useState(false);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+//initialize firestore DB and get reference
+const db = getFirestore(app);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
@@ -99,6 +109,39 @@ function addSizeToGoogleProfilePic(url) {
   }
   return url;
 }
+
+async function post(){
+  try{
+    //TODO: implement save post logic
+    let file = document.querySelector("#img-input").files[0]
+    let msgText = document.querySelector("#text-input").value
+    console.log(`${file} and ${msgText}`)
+    const postRef = await addDoc(collection(db, 'posts'), {
+      name: getUserName(),
+      imageUrl: null,
+      profilePicUrl: getProfilePicUrl(),
+      timestamp: serverTimestamp(),
+      message: msgText,
+    });
+    // 2 - Upload the image to Cloud Storage.
+    console.log('uploading to cloud storage')
+    const filePath = `${getAuth().currentUser.uid}/${postRef.id}/${file.name}`;
+    const newImageRef = ref(getStorage(app), filePath);
+    const fileSnapshot = await uploadBytesResumable(newImageRef, file);
+    console.log('image uploaded')
+    // 3 - Generate a public URL for the file.
+    const publicImageUrl = await getDownloadURL(newImageRef);
+    await updateDoc(postRef,{
+      imageUrl: publicImageUrl,
+      storageUri: fileSnapshot.metadata.fullPath
+    });
+    console.log('image url updated')
+  } catch (error) {
+    console.error('There was an error uploading a file to Cloud Storage:', error);
+  }
+}
+
+
 const linkStyle = {
   margin: "0rem",
   textDecoration: "none",
@@ -124,9 +167,8 @@ initFirebaseAuth();
             </button>
             </div>             
         </header>
-        {signedIn? <Outlet/>:<PleaseSignIn/>}
+        {signedIn? <Outlet context={[post]}/>:<PleaseSignIn/>}
       </div>
     );
-  }
-  
-  export default Header;
+}
+export default Header;
