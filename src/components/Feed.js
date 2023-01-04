@@ -4,7 +4,7 @@ function Feed(){
     let [,posts]= useOutletContext()
     return(
         <div className = "feed-div">
-            {posts?posts.map((post)=><PostSummary key={post.data.id}post={post.data()}/>):null}
+            {posts.length>=1?posts.map((post)=><PostSummary key={post.id} post={post}/>):"No posts, post the first!"}
         </div>
     )
 }
