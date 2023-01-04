@@ -2,7 +2,7 @@ import  {useOutletContext} from 'react-router-dom'
 import "../styles/post.css"
 
 function Post (){
-    const [post] = useOutletContext()
+    const [post,] = useOutletContext()
     return (
     <div id="post-form">
         
