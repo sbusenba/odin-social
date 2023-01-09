@@ -178,16 +178,14 @@ console.log(id)
 }
 
 initFirebaseAuth();
-useEffect(()=>{updatePosts()
-
-},[])
+useEffect(()=>{updatePosts()},[signedIn])
 
     return (
       <div className="app">
         <header className="App-header">
             <Link to="/" style={linkStyle}><div id ='app-logo'>Something Social</div></Link>
             <Link to="/post" style={linkStyle}><div id ='new-post'>+</div></Link>
-            <div id ='u`ser-container'>
+            <div id ='user-container'>
                 <div hidden id="user-pic"></div>
                 <div>
                 <div hidden id="user-name"></div>
