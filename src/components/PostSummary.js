@@ -2,15 +2,15 @@ import '../styles/postsummary.css'
 function PostSummary(props){
 
     console.log(props.post)
-    console.log(props.key)
     let imgStyle = {backgroundImage: `url(${props.post.imageUrl})`,
-    backgroundSize: 'auto 300px',
+    backgroundSize: '300px auto',
+    backgroundRepeat: 'no-repeat',
     height: `300px`,
     width: `auto`}
 
 
     return(
-        <div key={props.key} className="post-summary">
+        <div key={props.post.id} className="post-summary">
             <div style={imgStyle} alt="a post"/>
             <p>{props.post.message}</p>
             <div className='user-block'>

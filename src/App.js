@@ -170,6 +170,7 @@ async function updatePosts (){
   }
 
 function addPost(id,newPost){
+  newPost.id = id
   setPosts([newPost,...posts])
 }
 
@@ -186,7 +187,7 @@ useEffect(()=>{updatePosts()},[signedIn])
             <Link to="/" style={linkStyle}><div id ='app-logo'>Something Social</div></Link>
             <Link to="/post" style={linkStyle}><div id ='new-post'>+</div></Link>
             <div id ='user-container'>
-                <div hidden id="user-pic"></div>
+                <div hidden id="user-pic" referrerPolicy="no-referrer"></div>
                 <div>
                 <div hidden id="user-name"></div>
                 <button hidden id="sign-out" onClick = {signOutUser}>
