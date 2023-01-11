@@ -5,7 +5,7 @@ function Feed(){
     console.log(posts)
     return(
         <div className = "feed-div">
-            {posts.length>=1?posts.map((post)=><PostSummary key={post.imgURL} post={post}/>):"No posts, post the first!"}
+            {posts.length>=1?posts.map((post)=><PostSummary key={post.id} post={post}/>):"No posts, post the first!"}
         </div>
     )
 }

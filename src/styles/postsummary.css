@@ -1,0 +1,10 @@
+.user-block{
+    display:flex;
+    flex-direction:row;
+}
+.post-summary{
+    margin: 10px;
+    box-shadow:2px 2px 2px 2px;
+    padding:10px;
+    width:fit-content;
+}
