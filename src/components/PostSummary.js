@@ -2,6 +2,7 @@ import '../styles/postsummary.css'
 function PostSummary(props){
 
     console.log(props.post)
+    console.log(props.key)
     let imgStyle = {backgroundImage: `url(${props.post.imageUrl})`,
     backgroundSize: 'auto 300px',
     height: `300px`,
@@ -16,7 +17,7 @@ function PostSummary(props){
                 <img className = 'poster-profile-pic'
                 src ={props.post.profilePicUrl} 
                 alt="user profile pic"
-                referrerpolicy="no-referrer"></img>
+                referrerPolicy="no-referrer"></img>
                 <p>{props.post.name}</p>
             </div>
         </div>
