@@ -162,7 +162,8 @@ async function updatePosts (){
         if (change.type === 'removed') {
           deletePost(change.doc.id);
         } else {
-          var post = change.doc.data();
+          let post = change.doc.data();
+          console.log(post)
           addPost(change.doc.id, post);
         }
       });
@@ -171,7 +172,7 @@ async function updatePosts (){
 
 function addPost(id,newPost){
   newPost.id = id
-  setPosts([newPost,...posts])
+  setPosts(oldArray=>[...oldArray,newPost])
 }
 
 function deletePost(id){
