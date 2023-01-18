@@ -18,7 +18,7 @@ function Feed(){
     }, []);
     let feed1=[]
     let feed2=[]
-    let feed3 = []
+    let feed3=[]
     posts.forEach((post,index) => {     
           let myIndex = index%3 
           switch (myIndex) {
@@ -37,17 +37,17 @@ function Feed(){
     });
     return(
         <div className="feed-container">
-            <div className = "feed-div">
+            <div className = "feed-div feed1">
             {feed1.length>=1 ? 
                 feed1.map((post)=> <PostSummary key={post.id} post={post}/>)
                 :"No posts, post the first!"}
             </div>
-            <div className = "feed-div">
+            <div className = "feed-div feed2">
             {feed2.length>=1 ? 
                 feed2.map((post)=> <PostSummary key={post.id} post={post}/>)
                 :"No posts, post the first!"}
             </div>
-            <div className = "feed-div">
+            <div className = "feed-div feed3">
             {feed3.length>=1 ? 
                 feed3.map((post)=> <PostSummary key={post.id} post={post}/>)
                 :"No posts, post the first!"}
