@@ -2,6 +2,8 @@ import { BrowserRouter,Routes,Route} from "react-router-dom";
 import App from "./App";
 import Post from "./components/Post"
 import Feed from "./components/Feed"
+import PostDetail from "./components/PostDetail";
+import UserDetail from "./components/UserDetail";
 
 const RouteSwitch = () =>{
     return(
@@ -9,7 +11,9 @@ const RouteSwitch = () =>{
             <Routes>
                     <Route path = "/" element = {<App/>}>
                         <Route path="post" element = {<Post/>}/>
-                        <Route path="/" element = {<Feed/>}/>
+                        <Route path="" element = {<Feed/>}/>
+                        <Route path="/post/:postID"element = {<PostDetail/>}/> 
+                        <Route path='/user/:userID' element = {<UserDetail/>}/>
                     </Route>        
             </Routes>
         </BrowserRouter>
