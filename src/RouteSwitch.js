@@ -4,6 +4,7 @@ import Post from "./components/Post"
 import Feed from "./components/Feed"
 import PostDetail from "./components/PostDetail";
 import UserDetail from "./components/UserDetail";
+import EditProfile from "./components/EditProfile";
 
 const RouteSwitch = () =>{
     return(
@@ -14,6 +15,7 @@ const RouteSwitch = () =>{
                         <Route path="" element = {<Feed/>}/>
                         <Route path="/post/:postID"element = {<PostDetail/>}/> 
                         <Route path='/user/:userID' element = {<UserDetail/>}/>
+                        <Route path='/editprofile/' element = {<EditProfile/>}/>
                     </Route>        
             </Routes>
         </BrowserRouter>
