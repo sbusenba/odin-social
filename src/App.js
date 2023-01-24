@@ -24,6 +24,7 @@ import { getFirestore,
   serverTimestamp,
    getDocs, query, limit,onSnapshot,
    } from "firebase/firestore";
+import Feed from "./components/Feed";
 
 function App() {
 
@@ -147,6 +148,7 @@ async function postFn(){
   } catch (error) {
     console.error('There was an error uploading a file to Cloud Storage:', error);
   }
+  updatePosts()
 }
 
 
@@ -155,10 +157,15 @@ const linkStyle = {
   textDecoration: "none",
   color: "rgb(255,255,255)",
 };
+
 async function updatePosts (){
-    const recentLogsQuery = query(collection(db,'posts'),limit(100));
+    let recentLogsQuery = await query(collection(db,'posts'),limit(100));
+    setPosts([])
+    console.log('update posts')
     onSnapshot(recentLogsQuery, function(snapshot) {
+      console.log(snapshot.docChanges())
       snapshot.docChanges().forEach(function(change) {
+        console.log(change.type)
         if (change.type === 'removed') {
           deletePost(change.doc.id);
         } else {
@@ -177,10 +184,11 @@ function addPost(id,newPost){
 
 function deletePost(id){
 console.log(id)
+   
 }
 
 initFirebaseAuth();
-useEffect(()=>{updatePosts()},[signedIn])
+useEffect(()=>{updatePosts()},[])
 
     return (
       <div className="app">
@@ -200,6 +208,7 @@ useEffect(()=>{updatePosts()},[signedIn])
             </button>
             </div>             
         </header>
+        <div>{posts.length}</div>
         {signedIn? <Outlet context={[postFn,posts]}/>:<PleaseSignIn/>}
       </div>
     );
