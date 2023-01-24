@@ -5,7 +5,7 @@ function PostDetail(){
 return (
     <div>
     <p>here is post {params.postID}</p>
-    <p>posted by user: {params.userID}</p>
+    
     
     </div>
 )
