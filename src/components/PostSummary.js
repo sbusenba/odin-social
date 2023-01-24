@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import '../styles/postsummary.css'
 function PostSummary(props){
 
@@ -5,10 +6,14 @@ function PostSummary(props){
     let imgStyle = {
     height: `auto`,
     width: `300px`}
+    useEffect(()=>{})
 
+
+
+    
 
     return(
-        <div key={props.post.id} className="post-summary">
+        <div key={props.post.id} id = {props.post.id} className="post-summary">
             <img src = {props.post.imageUrl} 
             style={imgStyle} alt="a post"/>
             <p>{props.post.message}</p>
