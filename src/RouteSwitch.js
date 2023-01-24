@@ -15,7 +15,7 @@ const RouteSwitch = () =>{
                         <Route path="" element = {<Feed/>}/>
                         <Route path="/post/:postID"element = {<PostDetail/>}/> 
                         <Route path='/user/:userID' element = {<UserDetail/>}/>
-                        <Route path='/editprofile/' element = {<EditProfile/>}/>
+                        <Route path='/editprofile' element = {<EditProfile/>}/>
                     </Route>        
             </Routes>
         </BrowserRouter>
