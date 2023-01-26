@@ -194,7 +194,7 @@ useEffect(()=>{updatePosts()},[])
       <div className="app">
         <header className="App-header">
             <Link to="/" style={linkStyle}><div id ='app-logo'>Something Social</div></Link>
-            <Link to="/post" style={linkStyle}><div id ='new-post'>+</div></Link>
+            <Link to="/createpost" style={linkStyle}><div id ='new-post'>+</div></Link>
             <div id ='user-container'>
                 <Link to="/editprofile" style ={linkStyle}><div hidden id="user-pic" referrerPolicy="no-referrer"></div></Link>
                 <div>

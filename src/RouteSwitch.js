@@ -11,7 +11,7 @@ const RouteSwitch = () =>{
         <BrowserRouter>
             <Routes>
                     <Route path = "/" element = {<App/>}>
-                        <Route path="post" element = {<Post/>}/>
+                        <Route path="createpost" element = {<Post/>}/>
                         <Route path="" element = {<Feed/>}/>
                         <Route path="/post/:postID"element = {<PostDetail/>}/> 
                         <Route path='/user/:userID' element = {<UserDetail/>}/>
