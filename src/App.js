@@ -21,8 +21,8 @@ import { getFirestore,
   collection,
   addDoc,
   updateDoc,
-  serverTimestamp,
-   getDocs, query, limit,onSnapshot,
+  serverTimestamp, doc, setDoc,
+   getDoc, query, limit,onSnapshot,
    } from "firebase/firestore";
 import Feed from "./components/Feed";
 
@@ -126,6 +126,7 @@ async function postFn(){
     let msgText = document.querySelector("#text-input").value
     console.log(`${file} and ${msgText}`)
     const postRef = await addDoc(collection(db, 'posts'), {
+      userID: auth.currentUser.uid,
       name: getUserName(),
       imageUrl: null,
       profilePicUrl: getProfilePicUrl(),
@@ -168,17 +169,38 @@ async function updatePosts (){
         console.log(change.type)
         if (change.type === 'removed') {
           deletePost(change.doc.id);
-        } else {
+        } else if (change.type ==='added'){ 
           let post = change.doc.data();
-          console.log(post)
           addPost(change.doc.id, post);
         }
       });
     });
   }
 
-function addPost(id,newPost){
+
+
+async function addPost(id,newPost){
   newPost.id = id
+  let userInfo = await getDoc(doc(db,'users',`${newPost.userID}`))
+  if (userInfo.exists()) {
+    let user = userInfo.data();
+    newPost.name = user.userName
+    newPost.profilePicUrl = user.profilePicUrl
+  } else {
+    // user Doesn't exist, attempt to add to DB
+    const userInfo = await setDoc(doc(db, 'users',`${newPost.userID}`), {
+      userName: newPost.name,
+      profilePicUrl: newPost.profilePicUrl,
+    });
+
+    console.log("No such document!");
+  }
+
+  let user = await userInfo.data();
+  newPost.name = user.userName 
+  newPost.profilePicUrl = user.profilePicUrl
+  console.log('user',user)
+  console.log('adding',newPost) 
   setPosts(oldArray=>[...oldArray,newPost])
 }
 
