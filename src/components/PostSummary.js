@@ -8,6 +8,7 @@ function PostSummary(props){
     height: `auto`,
     width: `300px`}
     useEffect(()=>{})
+    const userLink = `user/${props.post.userID}`
     const postLink = `post/${props.post.id}`
     const linkStyle = {
         margin: "0rem",
@@ -21,13 +22,15 @@ function PostSummary(props){
                     style={imgStyle} alt="a post"/>
                 <p>{props.post.message}</p>
             </Link>
-            <div className='user-block'>
-                <img className = 'poster-profile-pic'
-                src ={props.post.profilePicUrl} 
-                alt="user profile pic"
-                referrerPolicy="no-referrer"></img>
-                <p>{props.post.name}</p>
-            </div> 
+            <Link to={userLink} style={linkStyle}>
+                <div className='user-block'>
+                    <img className = 'poster-profile-pic'
+                    src ={props.post.profilePicUrl} 
+                    alt="user profile pic"
+                    referrerPolicy="no-referrer"></img>
+                    <p>{props.post.name}</p>
+                </div> 
+            </Link>
         </div>
     )
 }
