@@ -1,4 +1,4 @@
-import { Outlet,Link } from "react-router-dom";
+import { Outlet,Link, useNavigate, Navigate } from "react-router-dom";
 import{useEffect, useState}from 'react';
 import './styles/App.css'
 import { initializeApp } from "firebase/app";
@@ -16,12 +16,13 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject
 } from 'firebase/storage';
 import { getFirestore,
   collection,
   addDoc,
   updateDoc,
-  serverTimestamp, doc, setDoc,
+  serverTimestamp, doc, setDoc, deleteDoc,
    getDoc, query, limit,onSnapshot,
    } from "firebase/firestore";
 import Feed from "./components/Feed";
@@ -46,11 +47,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
+const navigate = useNavigate()
 
 async function signIn() {
   //Sign in Firebase with credential from the Google user.
   var provider = new GoogleAuthProvider();
   await signInWithPopup(auth,provider)
+  
   setSignedIn(true);
 }
 
@@ -82,6 +85,8 @@ function getUserName() {
 function authStateObserver(user) {
   if (user) {
     // User is signed in!
+    console.log('user:',auth.currentUser.uid)
+
     // Get the signed-in user's profile pic and name.
     var profilePicUrl = getProfilePicUrl();
     var userName = getUserName();
@@ -202,13 +207,32 @@ async function addPost(id,newPost){
   console.log('user',user)
   console.log('adding',newPost) 
   setPosts(oldArray=>[...oldArray,newPost])
+  navigate('/')
 }
 
 function deletePost(id){
-console.log(id)
-   
+  console.log(`deleting`,id)
+  setPosts((oldArray)=>{
+    let newArray = oldArray.filter(post=>post.id!==id);
+    return newArray})
 }
 
+async function deleteFn(id){
+  navigate('/')
+  const myDoc = await getDoc(doc(db, "posts", id));
+  const filePath = `${myDoc.data().storageUri}`;
+  const imageRef = ref(getStorage(app), filePath);
+  deleteObject(imageRef).then(() => {
+    // File deleted successfully
+    console.log('Image Deleted')
+  }).catch((error) => {
+    // Uh-oh, an error occurred!
+    console.log(error)
+  });
+  await deleteDoc(doc(db, "posts", id))
+  deletePost(id)
+  
+}
 initFirebaseAuth();
 useEffect(()=>{updatePosts()},[])
 
@@ -230,8 +254,7 @@ useEffect(()=>{updatePosts()},[])
             </button>
             </div>             
         </header>
-        <div>{posts.length}</div>
-        {signedIn? <Outlet context={[postFn,posts]}/>:<PleaseSignIn/>}
+        {signedIn? <Outlet context={[postFn,posts,auth.currentUser.uid,deleteFn]}/>:<PleaseSignIn/>}
       </div>
     );
 }

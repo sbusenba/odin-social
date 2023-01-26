@@ -3,14 +3,14 @@ import { useOutletContext } from "react-router-dom";
 function PostDetail(){
     let params = useParams()
     console.log(params)
-    let [,posts]= useOutletContext()
+    let [,posts,userID,deleteFn]= useOutletContext()
     let myPost = posts.filter((post)=>post.id===params.postID)
     console.log(myPost)
     let imgStyle = {
         height: `auto`,
         width: `900px`}
 return (
-    
+    (myPost !== null)?
     <div key={myPost[0].id} id = {params.postID} className="post-summary">
             <img src = {myPost[0].imageUrl} 
             style={imgStyle} alt="a post"/>
@@ -24,8 +24,8 @@ return (
                 referrerPolicy="no-referrer"></img>
                 <p>{myPost[0].name}</p>
             </div>
-            
-        </div>
+            {(userID === myPost[0].userID)?<button onClick={()=>deleteFn(myPost[0].id)}>delete</button>:null}
+        </div>: <p>Post Deleted</p>
 )
 }
 export default PostDetail;
