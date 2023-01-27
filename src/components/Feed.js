@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom"
 import PostSummary from "./PostSummary"
 import '../styles/feed.css'
 function Feed(){
-    let [,posts]= useOutletContext()
+    let [,posts,,]= useOutletContext()
     console.log("<feed>")
     console.log(posts)
     let feedRef = useRef()
