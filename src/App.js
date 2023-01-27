@@ -25,11 +25,9 @@ import { getFirestore,
   serverTimestamp, doc, setDoc, deleteDoc,
    getDoc, query, limit,onSnapshot,
    } from "firebase/firestore";
-import Feed from "./components/Feed";
+
 
 function App() {
-
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCPbuSvifzyolZ6rO83Bzv1HEyRAaMhsyM",
@@ -247,8 +245,18 @@ async function deleteFn(id){
   
 }
 
-async function updateUserPic(){
-  
+async function updateProfilePic(){
+  console.log('profile pic update attempted')
+  let file = document.querySelector("#img-input").files[0]
+  let userDocRef =doc(db, "users", auth.currentUser.uid)
+  const filePath = `${getAuth().currentUser.uid}/profile/${file.name}`;
+  const newImageRef = ref(getStorage(app), filePath);
+  const fileSnapshot = await uploadBytesResumable(newImageRef, file);
+  // 3 - Generate a public URL for the file.
+  const publicImageUrl = await getDownloadURL(newImageRef);
+  await updateDoc(userDocRef,{
+    profilePicUrl: publicImageUrl,
+  });
 }
 
 initFirebaseAuth();
@@ -276,7 +284,7 @@ useEffect(()=>{updatePosts()},[])
             </button>
             </div>             
         </header>
-        {signedIn? <Outlet context={[postFn,posts,auth.currentUser.uid,deleteFn]}/>:<PleaseSignIn/>}
+        {signedIn? <Outlet context={[postFn,posts,auth.currentUser.uid,deleteFn,updateProfilePic]}/>:<PleaseSignIn/>}
       </div>
     );
 }
