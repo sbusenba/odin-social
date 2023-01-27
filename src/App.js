@@ -1,4 +1,4 @@
-import { Outlet,Link, useNavigate, Navigate } from "react-router-dom";
+import { Outlet,Link, useNavigate} from "react-router-dom";
 import{useEffect, useState}from 'react';
 import './styles/App.css'
 import { initializeApp } from "firebase/app";
@@ -48,7 +48,7 @@ const db = getFirestore(app);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 const navigate = useNavigate()
-
+const [userPic,setUserPic] =useState('')
 async function signIn() {
   //Sign in Firebase with credential from the Google user.
   var provider = new GoogleAuthProvider();
@@ -71,7 +71,7 @@ function initFirebaseAuth() {
 // Returns the signed-in user's profile Pic URL.
 function getProfilePicUrl() {
   // TODO 4: Return the user's profile pic URL.
-  return auth.currentUser.photoURL || '/images/profile_placeholder.png';
+  return auth.currentUser.photoURL ;
 }
 
 // Returns the signed-in user's display name.
@@ -82,7 +82,7 @@ function getUserName() {
 
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-function authStateObserver(user) {
+async function authStateObserver(user) {
   if (user) {
     // User is signed in!
     console.log('user:',auth.currentUser.uid)
@@ -92,10 +92,23 @@ function authStateObserver(user) {
     var userName = getUserName();
 
     // Set the user's profile pic and name.
-    document.querySelector('#user-pic').style.backgroundImage =
+    let userInfo = await getDoc(doc(db,'users',`${auth.currentUser.uid}`))
+    if (userInfo.exists()) {
+      let user = userInfo.data();
+      document.querySelector('#user-name').textContent = user.userName
+      setUserPic (user.profilePicUrl)
+    } else {
+      // user Doesn't exist, attempt to add to DB
+      const userInfo = await setDoc(doc(db, 'users',`${auth.currentUser.uid}`), {
+        userName: userName,
+        profilePicUrl:  addSizeToGoogleProfilePic(profilePicUrl),
+        
+      });
+      document.querySelector('#user-pic').style.src =
       'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
       document.querySelector('#user-name').textContent = userName;
 
+    }
     // Show user's profile and sign-out button.
     document.querySelector('#user-pic').removeAttribute('hidden');
     document.querySelector('#user-name').removeAttribute('hidden');
@@ -126,7 +139,7 @@ function addSizeToGoogleProfilePic(url) {
 
 async function postFn(){
   try{
-    //TODO: implement save post logic
+    //saves posts
     let file = document.querySelector("#img-input").files[0]
     let msgText = document.querySelector("#text-input").value
     console.log(`${file} and ${msgText}`)
@@ -233,6 +246,11 @@ async function deleteFn(id){
   deletePost(id)
   
 }
+
+async function updateUserPic(){
+  
+}
+
 initFirebaseAuth();
 useEffect(()=>{updatePosts()},[])
 
@@ -242,7 +260,11 @@ useEffect(()=>{updatePosts()},[])
             <Link to="/" style={linkStyle}><div id ='app-logo'>Something Social</div></Link>
             <Link to="/createpost" style={linkStyle}><div id ='new-post'>+</div></Link>
             <div id ='user-container'>
-                <Link to="/editprofile" style ={linkStyle}><div hidden id="user-pic" referrerPolicy="no-referrer"></div></Link>
+                <Link to="/editprofile" style ={linkStyle}>
+                    <img hidden id="user-pic" 
+                    referrerPolicy="no-referrer"
+                    src ={userPic}></img>
+                </Link>
                 <div>
                 <div hidden id="user-name"></div>
                 <button hidden id="sign-out" onClick = {signOutUser}>
