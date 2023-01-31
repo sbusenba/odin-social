@@ -4,4 +4,5 @@
 }
 .feed-div{
     height:fit-content;
+    flex: 0 1 1;
 }
