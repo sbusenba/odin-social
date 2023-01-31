@@ -14,7 +14,7 @@ function Post (){
     function submit(){
         post()
         setEntryStatus('')
-        document.querySelector('#img-input').files = []
+        document.querySelector('#img-input').files = new FileList()
         document.querySelector('#text-input').value = '' 
     }
     return (
