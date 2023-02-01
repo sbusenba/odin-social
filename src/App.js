@@ -187,8 +187,6 @@ async function updatePosts (){
     
     console.log('update posts')
     onSnapshot(recentLogsQuery, function(snapshot) {
-
-      setPosts([])
       console.log(snapshot.docChanges())
       snapshot.docChanges().forEach(function(change) {
         console.log(change.type)
