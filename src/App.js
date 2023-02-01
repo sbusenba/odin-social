@@ -151,12 +151,10 @@ async function postFn(){
       timestamp: serverTimestamp(),
       message: msgText,
     });
-  } catch(error){
-    console.error('There was an error uploading post to firebase:', error);
-  }
+
 
     // 2 - Upload the image to Cloud Storage.
-    try{
+   
     console.log('uploading to cloud storage')
     const filePath = `${getAuth().currentUser.uid}/${postRef.id}/${file.name}`;
     const newImageRef = ref(getStorage(app), filePath);
@@ -164,18 +162,15 @@ async function postFn(){
     console.log('image uploaded')
     // 3 - Generate a public URL for the file.
     const publicImageUrl = await getDownloadURL(newImageRef);
-    } catch (error){
-      console.error('There was an error uploading images to cloud firestore:', error);
-    }
 
-  try{
+
     await updateDoc(postRef,{
       imageUrl: publicImageUrl,
       storageUri: fileSnapshot.metadata.fullPath
     });
     console.log('image url updated')
   } catch (error) {
-    console.error('There was an error uploading a file to Cloud Storage:', error);
+    console.error('There was an error uploading your post:', error);
   }
   updatePosts()
 }
