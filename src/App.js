@@ -24,6 +24,8 @@ import { getFirestore,
   updateDoc,
   serverTimestamp, doc, setDoc, deleteDoc,
    getDoc, query, limit,onSnapshot,
+   where,
+   orderBy,
    } from "firebase/firestore";
 
 
@@ -149,7 +151,12 @@ async function postFn(){
       timestamp: serverTimestamp(),
       message: msgText,
     });
+  } catch(error){
+    console.error('There was an error uploading post to firebase:', error);
+  }
+
     // 2 - Upload the image to Cloud Storage.
+    try{
     console.log('uploading to cloud storage')
     const filePath = `${getAuth().currentUser.uid}/${postRef.id}/${file.name}`;
     const newImageRef = ref(getStorage(app), filePath);
@@ -157,6 +164,11 @@ async function postFn(){
     console.log('image uploaded')
     // 3 - Generate a public URL for the file.
     const publicImageUrl = await getDownloadURL(newImageRef);
+    } catch (error){
+      console.error('There was an error uploading images to cloud firestore:', error);
+    }
+
+  try{
     await updateDoc(postRef,{
       imageUrl: publicImageUrl,
       storageUri: fileSnapshot.metadata.fullPath
@@ -176,10 +188,12 @@ const linkStyle = {
 };
 
 async function updatePosts (){
-    let recentLogsQuery = await query(collection(db,'posts'),limit(100));
-    setPosts([])
+    let recentLogsQuery = await query(collection(db,'posts'),limit(100),orderBy('name','asc'));
+    
     console.log('update posts')
     onSnapshot(recentLogsQuery, function(snapshot) {
+
+      setPosts([])
       console.log(snapshot.docChanges())
       snapshot.docChanges().forEach(function(change) {
         console.log(change.type)
@@ -191,9 +205,18 @@ async function updatePosts (){
         }
       });
     });
+   
   }
-
-
+function sortFeedByDate(){
+  let sortArray = posts
+    sortArray.sort((a,b)=> a.timestamp < b.timestamp? 1: -1)
+    setPosts(sortArray)
+}
+function sortFeedByUser(){
+  let sortArray = posts
+    sortArray.sort((a,b)=> a.userID < b.userID? 1: -1)
+    setPosts(sortArray)
+}
 
 async function addPost(id,newPost){
   newPost.id = id
@@ -256,6 +279,7 @@ async function updateProfilePic(){
   const publicImageUrl = await getDownloadURL(newImageRef);
   await updateDoc(userDocRef,{
     profilePicUrl: publicImageUrl,
+    profilePicUri: fileSnapshot.metadata.fullPath
   });
 }
 
@@ -269,7 +293,7 @@ useEffect(()=>{updatePosts()},[])
             <Link to="/createpost" style={linkStyle}><div id ='new-post'>+</div></Link>
             <div id ='user-container'>
                 <Link to="/editprofile" style ={linkStyle}>
-                    <img hidden id="user-pic" 
+                    <img alt="your user pic"hidden id="user-pic" 
                     referrerPolicy="no-referrer"
                     src ={userPic}></img>
                 </Link>
@@ -284,6 +308,11 @@ useEffect(()=>{updatePosts()},[])
             </button>
             </div>             
         </header>
+        <div>sort by:
+          <button onClick={sortFeedByDate}>date</button>
+          <button onClick={sortFeedByUser}>user</button>
+        </div>
+
         {signedIn? <Outlet context={[postFn,posts,auth.currentUser.uid,deleteFn,updateProfilePic]}/>:<PleaseSignIn/>}
       </div>
     );
