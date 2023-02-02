@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import '../styles/postsummary.css'
 function PostSummary(props){
 
-    console.log(props.post)
     let imgStyle = {
     height: `auto`,
     width: `300px`}

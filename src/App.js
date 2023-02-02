@@ -85,8 +85,6 @@ function getUserName() {
 async function authStateObserver(user) {
   if (user) {
     // User is signed in!
-    console.log('user:',auth.currentUser.uid)
-
     // Get the signed-in user's profile pic and name.
     var profilePicUrl = getProfilePicUrl();
     var userName = getUserName();
@@ -142,7 +140,6 @@ async function postFn(){
     //saves posts
     let file = document.querySelector("#img-input").files[0]
     let msgText = document.querySelector("#text-input").value
-    console.log(`${file} and ${msgText}`)
     const postRef = await addDoc(collection(db, 'posts'), {
       userID: auth.currentUser.uid,
       name: getUserName(),
@@ -188,9 +185,7 @@ async function updatePosts (){
     
     console.log('update posts')
     onSnapshot(recentLogsQuery, function(snapshot) {
-      console.log(snapshot.docChanges())
       snapshot.docChanges().forEach(function(change) {
-        console.log(change.type)
         if (change.type === 'removed') {
           deletePost(change.doc.id);
         } else if (change.type ==='added'){ 
@@ -232,8 +227,6 @@ async function addPost(id,newPost){
   let user = await userInfo.data();
   newPost.name = user.userName 
   newPost.profilePicUrl = user.profilePicUrl
-  console.log('user',user)
-  console.log('adding',newPost) 
   setPosts(oldArray=>[...oldArray,newPost])
   navigate('/')
 }
@@ -257,9 +250,12 @@ async function deleteFn(id){
     // Uh-oh, an error occurred!
     console.log(error)
   });
+  try{
   await deleteDoc(doc(db, "posts", id))
   deletePost(id)
-  
+  } catch (error){
+    console.error('unable to delete:', error)
+  }
 }
 
 async function updateProfilePic(){
