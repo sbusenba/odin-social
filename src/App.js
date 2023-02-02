@@ -151,8 +151,6 @@ async function postFn(){
       profilePicUrl: getProfilePicUrl(),
       timestamp: serverTimestamp(),
       message: msgText,
-      likes:0,
-      usersThatLiked:[],
     });
 
 
@@ -190,8 +188,12 @@ async function updatePosts (){
       setPosts([])
       let recentLogsQuery = await query(collection(db,'posts'),limit(100),orderBy('timestamp','desc'));
       let docs = await getDocs(recentLogsQuery)
+      let users = await getDocs(query(collection(db,'users'),limit(100)))
       docs.forEach((doc)=>{
         let post = doc.data();
+        let postLikes = 0;
+        users.forEach((user)=>{if (user.data().likes.includes(doc.id)) postLikes++})
+        post.likes = postLikes;
         console.log(post.timestamp.seconds)
       addPost(doc.id, post);
       })
@@ -222,6 +224,7 @@ async function addPost(id,newPost){
     const userInfo = await setDoc(doc(db, 'users',`${newPost.userID}`), {
       userName: newPost.name,
       profilePicUrl: newPost.profilePicUrl,
+      likes:[],
     });
 
     console.log("No such document!");
