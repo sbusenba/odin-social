@@ -184,37 +184,27 @@ const linkStyle = {
 };
 
 async function updatePosts (){
-    setPosts([])
-    let recentLogsQuery = await query(collection(db,'posts'),limit(100),orderBy('timestamp','desc'));
-    let docs = await getDocs(recentLogsQuery)
-    docs.forEach((doc)=>{
-      let post = doc.data();
-      console.log(post.timestamp.seconds)
-    addPost(doc.data().id, post);
-    })
-
-    // onSnapshot(recentLogsQuery, function(snapshot) {
-    //   snapshot.docChanges().forEach(function(change) {
-    //     if (change.type === 'removed') {
-    //       deletePost(change.doc.id);
-    //     } else if (change.type ==='added'){ 
-    //       let post = change.doc.data();
-    //       addPost(change.doc.id, post);
-    //     }
-    //   });
-    // });
-   
+    if(signedIn){
+      setPosts([])
+      let recentLogsQuery = await query(collection(db,'posts'),limit(100),orderBy('timestamp','desc'));
+      let docs = await getDocs(recentLogsQuery)
+      docs.forEach((doc)=>{
+        let post = doc.data();
+        console.log(post.timestamp.seconds)
+      addPost(doc.data().id, post);
+      })
+    }
   }
-function sortFeedByDate(){
+async function sortFeedByDate(){
   let sortArray = posts
     setPosts([])
-    sortArray.sort((a,b)=> a.timestamp.seconds < b.timestamp.seconds? 1: -1)
+    await sortArray.sort((a,b)=> a.timestamp.seconds < b.timestamp.seconds? 1: -1)
     setPosts(sortArray)
 }
-function sortFeedByUser(){
+async function sortFeedByUser(){
   let sortArray = posts
     setPosts([])
-    sortArray.sort((a,b)=> a.timestamp.seconds > b.timestamp.seconds? 1: -1)
+    await sortArray.sort((a,b)=> a.timestamp.seconds > b.timestamp.seconds? 1: -1)
     setPosts(sortArray)
 }
 
@@ -310,8 +300,8 @@ useEffect(()=>{updatePosts()},[])
             </div>             
         </header>
         <div>sort by:
-          <button onClick={()=>sortFeedByDate()}>date</button>
-          <button onClick={()=>sortFeedByUser()}>user</button>
+          <button onClick={()=>sortFeedByDate()}>New</button>
+          <button onClick={()=>sortFeedByUser()}>Oldest</button>
         </div>
 
         {signedIn? <Outlet context={[postFn,posts,auth.currentUser.uid,deleteFn,updateProfilePic]}/>:<PleaseSignIn/>}
