@@ -1,8 +1,9 @@
 .feed-container{
     display:flex;
     flex-direction: row;
+    justify-content: center;
 }
 .feed-div{
     height:fit-content;
-    flex: 0 1 1;
+    flex: 1 0 1;
 }
