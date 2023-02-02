@@ -106,6 +106,7 @@ async function authStateObserver(user) {
       document.querySelector('#user-pic').style.src =
       'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
       document.querySelector('#user-name').textContent = userName;
+      
 
     }
     // Show user's profile and sign-out button.
@@ -115,11 +116,14 @@ async function authStateObserver(user) {
 
     // Hide sign-in button.
     document.querySelector('#sign-in').setAttribute('hidden', 'true');
+    // user is signed in
+    setSignedIn(true)
 
     // We save the Firebase Messaging Device token and enable notifications.
     //saveMessagingDeviceToken();
   } else {
     // User is signed out!
+    setSignedIn(false)
     // Hide user's profile and sign-out button.
     document.querySelector('#user-pic').setAttribute('hidden', 'true');
     document.querySelector('#user-name').setAttribute('hidden', 'true');
