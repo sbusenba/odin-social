@@ -118,7 +118,6 @@ async function authStateObserver(user) {
     document.querySelector('#sign-in').setAttribute('hidden', 'true');
     // user is signed in
     setSignedIn(true)
-    updatePosts()
     // We save the Firebase Messaging Device token and enable notifications.
     //saveMessagingDeviceToken();
   } else {
