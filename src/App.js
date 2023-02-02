@@ -151,6 +151,8 @@ async function postFn(){
       profilePicUrl: getProfilePicUrl(),
       timestamp: serverTimestamp(),
       message: msgText,
+      likes:0,
+      usersThatLiked:[],
     });
 
 
