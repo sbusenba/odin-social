@@ -191,7 +191,7 @@ async function updatePosts (){
       docs.forEach((doc)=>{
         let post = doc.data();
         console.log(post.timestamp.seconds)
-      addPost(doc.data().id, post);
+      addPost(doc.id, post);
       })
     }
   }
