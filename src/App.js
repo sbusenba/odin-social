@@ -26,6 +26,7 @@ import { getFirestore,
    getDoc, query, limit,onSnapshot,
    where,
    orderBy,
+   getDocs,
    } from "firebase/firestore";
 
 
@@ -181,29 +182,36 @@ const linkStyle = {
 
 async function updatePosts (){
     setPosts([])
-    let recentLogsQuery = await query(collection(db,'posts'),limit(100),orderBy('name','asc'));
-    
-    console.log('update posts')
-    onSnapshot(recentLogsQuery, function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-        if (change.type === 'removed') {
-          deletePost(change.doc.id);
-        } else if (change.type ==='added'){ 
-          let post = change.doc.data();
-          addPost(change.doc.id, post);
-        }
-      });
-    });
+    let recentLogsQuery = await query(collection(db,'posts'),limit(100),orderBy('timestamp','desc'));
+    let docs = await getDocs(recentLogsQuery)
+    docs.forEach((doc)=>{
+      let post = doc.data();
+      console.log(post.timestamp.seconds)
+    addPost(doc.data().id, post);
+    })
+
+    // onSnapshot(recentLogsQuery, function(snapshot) {
+    //   snapshot.docChanges().forEach(function(change) {
+    //     if (change.type === 'removed') {
+    //       deletePost(change.doc.id);
+    //     } else if (change.type ==='added'){ 
+    //       let post = change.doc.data();
+    //       addPost(change.doc.id, post);
+    //     }
+    //   });
+    // });
    
   }
 function sortFeedByDate(){
   let sortArray = posts
-    sortArray.sort((a,b)=> a.timestamp < b.timestamp? 1: -1)
+    setPosts([])
+    sortArray.sort((a,b)=> a.timestamp.seconds < b.timestamp.seconds? 1: -1)
     setPosts(sortArray)
 }
 function sortFeedByUser(){
   let sortArray = posts
-    sortArray.sort((a,b)=> a.userID < b.userID? 1: -1)
+    setPosts([])
+    sortArray.sort((a,b)=> a.timestamp.seconds > b.timestamp.seconds? 1: -1)
     setPosts(sortArray)
 }
 
@@ -299,8 +307,8 @@ useEffect(()=>{updatePosts()},[])
             </div>             
         </header>
         <div>sort by:
-          <button onClick={sortFeedByDate}>date</button>
-          <button onClick={sortFeedByUser}>user</button>
+          <button onClick={()=>sortFeedByDate()}>date</button>
+          <button onClick={()=>sortFeedByUser()}>user</button>
         </div>
 
         {signedIn? <Outlet context={[postFn,posts,auth.currentUser.uid,deleteFn,updateProfilePic]}/>:<PleaseSignIn/>}
