@@ -275,7 +275,7 @@ async function updateProfilePic(){
 }
 
 initFirebaseAuth();
-useEffect(()=>{updatePosts()},[])
+useEffect(()=>{updatePosts()},[signedIn])
 
     return (
       <div className="app">
