@@ -183,6 +183,7 @@ const linkStyle = {
 };
 
 async function updatePosts (){
+    setPosts([])
     let recentLogsQuery = await query(collection(db,'posts'),limit(100),orderBy('name','asc'));
     
     console.log('update posts')
