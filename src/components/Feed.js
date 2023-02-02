@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom"
 import PostSummary from "./PostSummary"
 import '../styles/feed.css'
 function Feed(){
-    let [,posts,,]= useOutletContext()
+    let [,posts,,,,,sortDate,sortDateRev,sortLikes]= useOutletContext()
     console.log("<feed>")
     console.log(posts)
     let feedRef = useRef()
@@ -36,7 +36,16 @@ function Feed(){
           } 
     });
     return(
+        <div>
+            <div>sort by:
+          <button onClick={()=>sortDate()}>New</button>
+          <button onClick={()=>sortDateRev()}>Oldest</button>
+          <button onClick={()=>sortLikes()}>Likes</button>
+        </div>
+        
         <div className="feed-container">
+         
+
             <div className = "feed-div feed1">
             {feed1.length>=1 ? 
                 feed1.map((post)=> <PostSummary key={post.id} post={post}/>)
@@ -52,6 +61,7 @@ function Feed(){
                 feed3.map((post)=> <PostSummary key={post.id} post={post}/>)
                 :"No posts, post the first!"}
             </div>
+        </div>
         </div>
     )
 }

@@ -192,10 +192,12 @@ async function updatePosts (){
       docs.forEach((doc)=>{
         let post = doc.data();
         let postLikes = 0;
-        users.forEach((user)=>{if (user.data().likes.includes(doc.id)) postLikes++})
+        users.forEach((user)=>{if (user.data().likes.includes(doc.id)){ 
+          postLikes++;
+          if (user.id=== auth.currentUser.uid){post.currentUserLiked = true}
+        }})
         post.likes = postLikes;
-        console.log(post.timestamp.seconds)
-      addPost(doc.id, post);
+        addPost(doc.id, post);
       })
     }
   }
@@ -205,12 +207,20 @@ async function sortFeedByDate(){
     await sortArray.sort((a,b)=> a.timestamp.seconds < b.timestamp.seconds? 1: -1)
     setPosts(sortArray)
 }
-async function sortFeedByUser(){
+async function sortFeedByDateRev(){
   let sortArray = posts
     setPosts([])
     await sortArray.sort((a,b)=> a.timestamp.seconds > b.timestamp.seconds? 1: -1)
     setPosts(sortArray)
 }
+
+async function sortFeedByLikes(){
+  let sortArray = posts
+    setPosts([])
+    await sortArray.sort((a,b)=> a.likes < b.likes? 1: -1)
+    setPosts(sortArray)
+}
+
 
 async function addPost(id,newPost){
   newPost.id = id
@@ -243,6 +253,8 @@ function deletePost(id){
     let newArray = oldArray.filter(post=>post.id!==id);
     return newArray})
 }
+
+
 
 async function deleteFn(id){
   navigate('/')
@@ -278,7 +290,18 @@ async function updateProfilePic(){
     profilePicUri: fileSnapshot.metadata.fullPath
   });
 }
-
+async function likeFn(id){
+  console.log('liking: ',id)
+  let userDocRef =doc(db, "users", auth.currentUser.uid)
+  let myUserDoc = await getDoc(userDocRef)
+  let myLikes = myUserDoc.data().likes
+  await myLikes.push(id)
+  await updateDoc(userDocRef,{
+    likes:myLikes
+  });
+  navigate('/')
+  await updatePosts()
+}
 initFirebaseAuth();
 useEffect(()=>{updatePosts()},[signedIn])
 
@@ -303,13 +326,11 @@ useEffect(()=>{updatePosts()},[signedIn])
                 Sign-in with Google
             </button>
             </div>             
-        </header>
-        <div>sort by:
-          <button onClick={()=>sortFeedByDate()}>New</button>
-          <button onClick={()=>sortFeedByUser()}>Oldest</button>
-        </div>
-
-        {signedIn? <Outlet context={[postFn,posts,auth.currentUser.uid,deleteFn,updateProfilePic]}/>:<PleaseSignIn/>}
+        </header>      
+        {signedIn? <Outlet context={[postFn,
+          posts,auth.currentUser.uid,deleteFn,
+          updateProfilePic,likeFn,sortFeedByDate,
+          sortFeedByDateRev,sortFeedByLikes]}/>:<PleaseSignIn/>}
       </div>
     );
 }
