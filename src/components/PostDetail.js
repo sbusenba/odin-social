@@ -24,6 +24,7 @@ return (
                 referrerPolicy="no-referrer"></img>
                 <p>{myPost[0].name}</p>
             </div>
+            <p>likes:{myPost[0].likes}</p>
             {(userID === myPost[0].userID)?<button onClick={()=>deleteFn(myPost[0].id)}>delete</button>:null}
         </div>: <p>Post Deleted</p>
 )
