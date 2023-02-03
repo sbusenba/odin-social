@@ -192,7 +192,7 @@ async function updatePosts (){
       docs.forEach((doc)=>{
         let post = doc.data();
         let postLikes = 0;
-        users.forEach((user)=>{if (user.data().likes.exists() && user.data().likes.includes(doc.id)){ 
+        users.forEach((user)=>{if ((user.data().likes!= undefined) &&( user.data().likes.includes(doc.id))){ 
           postLikes++;
           if (user.id=== auth.currentUser.uid){post.currentUserLiked = true}
         }})
