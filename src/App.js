@@ -54,7 +54,15 @@ async function signIn() {
   //Sign in Firebase with credential from the Google user.
   var provider = new GoogleAuthProvider();
   await signInWithPopup(auth,provider)
-  
+  let userInfo = await getDoc(doc(db,'users',`${auth.currentUser.uid}`))
+  if (!userInfo.exists()) {
+    // user Doesn't exist, attempt to add to DB
+    const userInfo = await setDoc(doc(db, 'users',`${auth.currentUser.uid}`), {
+      userName: getUserName(),
+      profilePicUrl: getProfilePicUrl(),
+      likes:[],
+    });
+  }
   setSignedIn(true);
 }
 
