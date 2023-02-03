@@ -57,10 +57,11 @@ async function signIn() {
   let userInfo = await getDoc(doc(db,'users',`${auth.currentUser.uid}`))
   if (!userInfo.exists()) {
     // user Doesn't exist, attempt to add to DB
+    let likeArray = new Array()
     const userInfo = await setDoc(doc(db, 'users',`${auth.currentUser.uid}`), {
       userName: getUserName(),
       profilePicUrl: getProfilePicUrl(),
-      likes:[],
+      likes:likeArray,
     });
   }
   setSignedIn(true);
@@ -239,10 +240,11 @@ async function addPost(id,newPost){
     newPost.profilePicUrl = user.profilePicUrl
   } else {
     // user Doesn't exist, attempt to add to DB
+    let likeArray=  new Array()
     const userInfo = await setDoc(doc(db, 'users',`${newPost.userID}`), {
       userName: newPost.name,
       profilePicUrl: newPost.profilePicUrl,
-      likes:[],
+      likes:likeArray,
     });
 
     console.log("No such document!");
