@@ -17,7 +17,7 @@ function PostDetail(){
     }
     
 return (
-    (myPost !== null)?
+    (myPost.length>0)?
     <div key={myPost[0].id} id = {params.postID} className="post-summary">
             <img src = {myPost[0].imageUrl} 
             style={imgStyle} alt="a post"/>
@@ -35,7 +35,7 @@ return (
             {(myPost[0].currentUserLiked)?null:<button onClick={()=>likeThisPost()}>like</button>}
             {(userID === myPost[0].userID)?<button onClick={()=>deleteFn(myPost[0].id)}>delete</button>:null}
             <CommentBox comments ={myPost[0].comments} post={myPost[0].id} commentFn = {()=>commentFn(myPost[0].id)}/>
-        </div>: <p>Post Deleted</p>
+        </div>: <p>Loading Post...</p>
         
 )
 }

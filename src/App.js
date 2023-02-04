@@ -23,8 +23,7 @@ import { getFirestore,
   addDoc,
   updateDoc,
   serverTimestamp, doc, setDoc, deleteDoc,
-   getDoc, query, limit,onSnapshot,
-   where, exists,
+   getDoc, query, limit,
    orderBy,
    getDocs,
    } from "firebase/firestore";
@@ -161,16 +160,19 @@ async function postFn(){
       timestamp: serverTimestamp(),
       message: msgText,
     });
+    // generate comment file
+      await setDoc(doc(db,'comments',`${postRef.id}`),{
+        comments: [],
+      })
 
-
-    // 2 - Upload the image to Cloud Storage.
+    // Upload the image to Cloud Storage.
    
     console.log('uploading to cloud storage')
     const filePath = `${getAuth().currentUser.uid}/${postRef.id}/${file.name}`;
     const newImageRef = ref(getStorage(app), filePath);
     const fileSnapshot = await uploadBytesResumable(newImageRef, file);
     console.log('image uploaded')
-    // 3 - Generate a public URL for the file.
+    // Generate a public URL for the file.
     const publicImageUrl = await getDownloadURL(newImageRef);
 
 
@@ -182,6 +184,10 @@ async function postFn(){
   } catch (error) {
     console.error('There was an error uploading your post:', error);
   }
+
+
+
+
   updatePosts()
 }
 
@@ -329,8 +335,7 @@ async function likeFn(id){
   await updateDoc(userDocRef,{
     likes:myLikes
   });
-  navigate('/')
-  await updatePosts()
+  updatePosts()
 }
 
 async function checkForComments(postID){
@@ -355,7 +360,6 @@ async function addComment(postID){
   let comment = document.querySelector('.comment-input-box').value;
   await commentData.push({user:currentUser, comment:comment})
   await setDoc(commentsRef,{comments:commentData})
-  navigate('/')
   updatePosts()
 }
 

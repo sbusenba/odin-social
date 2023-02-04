@@ -5,7 +5,7 @@ let imgStyle = {
     width: `96px`}
 return(
         <div className ='comment-box'> Comments:
-            {(props.comments)?props.comments.map((comment)=><div className="comment" key={comment.user+comment.comment}>
+            {(props.comments)?props.comments.map((comment,index)=><div className="comment" key={index}>
                 <div className="comment-text">
                 <p >{comment.comment}</p>
                 </div>
