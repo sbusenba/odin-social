@@ -3,6 +3,8 @@
     flex-direction:row;
     padding:10px;
     box-shadow: 2px 2px 2px 2px;
+    align-self: flex-end;
+    justify-self: flex-end;
 }
 .post-summary{
     margin: 10px;

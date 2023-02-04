@@ -1,0 +1,15 @@
+.user-block{
+    display:flex;
+    flex-direction:row;
+    padding:10px;
+    box-shadow: 2px 2px 2px 2px;
+    width:fit-content;
+}
+.comment{
+    display:flex;
+    flex-direction:row;
+    padding:10px;
+    margin:10px;
+    box-shadow: 2px 2px 2px 2px;
+    justify-content: space-between;
+}
