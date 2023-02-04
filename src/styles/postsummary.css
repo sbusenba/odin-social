@@ -3,8 +3,9 @@
     flex-direction:row;
     padding:10px;
     box-shadow: 2px 2px 2px 2px;
-    align-self: flex-end;
-    justify-self: flex-end;
+    margin-left: 0px;
+    margin-right:0px;  
+    width:300px;
 }
 .post-summary{
     margin: 10px;
