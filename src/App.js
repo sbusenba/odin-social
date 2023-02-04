@@ -201,7 +201,7 @@ async function updatePosts (){
       docs.forEach((doc)=>{
         let post = doc.data();
         let postLikes = 0;
-        users.forEach((user)=>{if ((user.data().likes!= undefined) &&( user.data().likes.includes(doc.id))){ 
+        users.forEach((user)=>{if ((user.data().likes!== undefined) &&( user.data().likes.includes(doc.id))){ 
           postLikes++;
           if (user.id=== auth.currentUser.uid){post.currentUserLiked = true}
         }})
@@ -233,6 +233,26 @@ async function sortFeedByLikes(){
 
 async function addPost(id,newPost){
   newPost.id = id
+  //retrieve comments
+  let comments = await getDoc(doc(db,'comments',`${id}`))
+  if (comments.exists()){
+    let commentData =  comments.data().comments
+    commentData.forEach(async (comment)=>{
+      let userID = comment.user
+      let userInfo = await getDoc(doc(db,'users',`${userID}`))
+      if (userInfo.exists()) {
+        let user = userInfo.data();
+        comment.name = user.userName
+        comment.profilePicUrl = user.profilePicUrl
+      }
+    })
+    newPost.comments = commentData
+  } else {
+    newPost.comments = []
+    await setDoc(doc(db,'comments',`${id}`),{
+      comments: [],
+    })
+  }
   let userInfo = await getDoc(doc(db,'users',`${newPost.userID}`))
   if (userInfo.exists()) {
     let user = userInfo.data();
@@ -240,7 +260,7 @@ async function addPost(id,newPost){
     newPost.profilePicUrl = user.profilePicUrl
   } else {
     // user Doesn't exist, attempt to add to DB
-    let likeArray=  new Array()
+    let likeArray=  []
     const userInfo = await setDoc(doc(db, 'users',`${newPost.userID}`), {
       userName: newPost.name,
       profilePicUrl: newPost.profilePicUrl,
@@ -312,6 +332,35 @@ async function likeFn(id){
   navigate('/')
   await updatePosts()
 }
+
+async function checkForComments(postID){
+  let commentsRef =doc(db, "comments", postID)
+  let commentDoc = await getDoc(commentsRef)
+  let comments = new Array();
+  if (commentDoc.exists()){
+    comments = commentDoc.data().comments
+  } else {
+     await setDoc(commentsRef,{
+      comments:comments,
+    })
+  }
+}
+async function addComment(postID){
+  checkForComments(postID)
+  console.log('attempting to add comment to ',postID)
+  let commentsRef =doc(db, "comments", postID)
+  let commentDoc = await getDoc(commentsRef)
+  let commentData = commentDoc.data().comments;
+  let currentUser = auth.currentUser.uid;
+  let comment = document.querySelector('.comment-input-box').value;
+  await commentData.push({user:currentUser, comment:comment})
+  await setDoc(commentsRef,{comments:commentData})
+  navigate('/')
+  updatePosts()
+}
+
+
+
 initFirebaseAuth();
 useEffect(()=>{updatePosts()},[signedIn])
 
@@ -340,7 +389,7 @@ useEffect(()=>{updatePosts()},[signedIn])
         {signedIn? <Outlet context={[postFn,
           posts,auth.currentUser.uid,deleteFn,
           updateProfilePic,likeFn,sortFeedByDate,
-          sortFeedByDateRev,sortFeedByLikes]}/>:<PleaseSignIn/>}
+          sortFeedByDateRev,sortFeedByLikes,addComment]}/>:<PleaseSignIn/>}
       </div>
     );
 }
