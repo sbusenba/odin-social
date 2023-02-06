@@ -13,22 +13,20 @@ function Post (){
     }
     function submit(){
         post()
-        setEntryStatus('')
+        setEntryStatus('uploading')
         //document.querySelector('#img-input').files = new FileList()
         document.querySelector('#text-input').value = '' 
     }
     return (
+    (entryStatus!='uploading')?
     <div id="post-form">
             <p>Choose a picture to post</p>
             <input type="file" accept="image/*" id="img-input" onChange={fileSelected}></input>
             <p>Description:</p>       
             <input type="text"id="text-input" onChange = {description}></input>
             <button onClick={submit} disabled ={(entryStatus !=='complete')}>submit</button>
-        
-    
-    
-    
-    </div>
+    </div>:
+    <div>Uploading image... please wait...</div>
     )
 
 }
