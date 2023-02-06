@@ -36,7 +36,7 @@ function Feed(){
           } 
     });
     return(
-        <div>
+        <div className="feed-sort-container">
             <div>sort by:
           <button onClick={()=>sortDate()}>New</button>
           <button onClick={()=>sortDateRev()}>Oldest</button>
@@ -54,12 +54,12 @@ function Feed(){
             <div className = "feed-div feed2">
             {feed2.length>=1 ? 
                 feed2.map((post)=> <PostSummary key={post.id} post={post}/>)
-                :"No posts, post the first!"}
+                :null}
             </div>
             <div className = "feed-div feed3">
             {feed3.length>=1 ? 
                 feed3.map((post)=> <PostSummary key={post.id} post={post}/>)
-                :"No posts, post the first!"}
+                :null}
             </div>
         </div>
         </div>

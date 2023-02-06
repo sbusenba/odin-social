@@ -5,16 +5,22 @@
     box-shadow: 2px 2px 2px 2px;
     margin-left: 0px;
     margin-right:0px;  
-    width:300px;
+    width:280px;
+    background-color: bisque;
+}
+.user-bloc>p{
+    margin:10px;
 }
 .post-summary p {
     width:300px;
+    
 }
 .post-summary{
     margin: 10px;
     box-shadow:2px 2px 2px 2px;
     padding:10px;
     width:fit-content;
+    background-color: antiquewhite;
 }
 .poster-profile-pic {
     height:96px;

@@ -2,6 +2,10 @@
     display:flex;
     flex-direction: row;
     justify-content: center;
+    background-color: lightblue;
+}
+.feed-sort-container{
+    background-color: lightblue;
 }
 .feed-div{
     height:fit-content;
