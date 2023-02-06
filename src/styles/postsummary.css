@@ -7,6 +7,9 @@
     margin-right:0px;  
     width:300px;
 }
+.post-summary p {
+    width:300px;
+}
 .post-summary{
     margin: 10px;
     box-shadow:2px 2px 2px 2px;
